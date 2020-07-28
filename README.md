@@ -1,30 +1,75 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Tray.io Frontend Challenge
 
-## Getting Started
+## How to run
 
-First, run the development server:
+- Ensure you have npm and node installed
+- Ensure port 3000 is available
+- cd to the installation directory
+  `npm run start`
+- Visit http://localhost:3000/
 
-```bash
-npm run dev
-# or
-yarn dev
+## About the project
+
+- Multistep forms generator using [Material](https://material-ui.com/) / SASS with their CSS-in-JS solution for better theming and reusability
+- Registration form config provided as an use case
+- `<MultiStepFormComponent/>` is highly configurable with the following config
+
+```
+{
+  pages: [
+    {
+      name: "Page1", // name of the page
+      fields: [ // list of fields that the page can contain
+        {
+          label: "field1",
+          name: "field1",
+          placeholder: "Field 1",
+          type: "text", // needs to be supported by HTML <input> element.
+          text: "", // additional text to display next to any input elements
+          validation: { // validation object that can contain multiple rules
+            required: { message: "Please enter Field 1" }, // message to display on error
+            regex: {
+              regex: ADD_REGEX_HERE,
+              message: "Please enter data that matches the regex",
+            },
+            customValidation: (value) => { // custom validators also supported
+                return value ? true: false;
+            }
+          },
+        },
+      ],
+      submit: "Submit", // text that will be shown on the submit button for the page
+      submitData: true, // call the onSubmit function on any page to parse / submit as needed
+    },
+    {
+      name: "Done",
+      component: <SuccessComponent />, // pages can load components too
+    },
+  ],
+  onSubmit: (values) => { // forms submit function
+    // TODO do something with values
+    console.log(values);
+  },
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Website served statically built using NextJS
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Testing
 
-## Learn More
+The project includes
 
-To learn more about Next.js, take a look at the following resources:
+- unit tests for util methods
+- basic load test for components
+- snapshot testing for components
+- integration testing for the main `<MultiStepFormComponent>`
+- to run `npm run test`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Improvements
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Store the state of each field on the config itself to maintain backward traceability
+- Remove Material to build your own UI Kit to not rely on `<Context/>` and `<ThemeProvider/>` to prevent unnecessary deep re-renders
+- Create your own `<Field/>` component instead of using vanilla `<input/>` to allow for `<textareas/>` and better display of checkboxes and radio buttons
+- Allow multiple themes
+- Better cross browser compatibility
+- More testing
